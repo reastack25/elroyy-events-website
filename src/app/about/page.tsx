@@ -1,0 +1,3 @@
+import type { Metadata } from "next";
+export const metadata: Metadata = { title: "About Us", description: "Learn about Elroy Events and our approach to premium event solutions." };
+export default function AboutPage() { return <div className="container-shell py-40"><p className="eyebrow">About Elroy Events</p><h1 className="mt-5 max-w-3xl text-5xl font-semibold">Purposeful planning. Beautifully delivered.</h1><p className="mt-8 max-w-2xl text-lg leading-8 text-navy/65">We create considered event experiences through dependable equipment, responsive service and an eye for the details that matter. Our story and team details will be expanded as the company profile is finalized.</p></div>; }
