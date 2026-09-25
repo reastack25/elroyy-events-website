@@ -1,10 +1,71 @@
-import Image from "next/image";
-import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, Check } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Box, Calendar, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { inventoryCategories, inventoryItems } from "@/data/inventory";
+import { ProtectedContent } from "@/components/auth/protected-content";
 
-export const metadata: Metadata = { title: "Inventory", description: "Explore public event equipment categories from Elroy Events." };
+export const metadata: Metadata = { title: "Inventory", description: "View authorized event equipment inventory and event-ready resources." };
 
-export default function InventoryPage() { return <div><section className="bg-navy pb-20 pt-40 text-white"><div className="container-shell"><p className="eyebrow text-white/60">Public catalogue</p><h1 className="mt-5 max-w-3xl text-5xl font-semibold sm:text-6xl">Equipment for the occasion.</h1><p className="mt-6 max-w-2xl text-lg leading-8 text-white/65">Browse a selection of event essentials. Availability and final recommendations are confirmed when we prepare your quotation.</p></div></section><section className="container-shell py-20"><div className="flex flex-wrap gap-2">{inventoryCategories.map((category) => <span key={category} className="rounded-full border border-navy/15 px-4 py-2 text-sm text-navy/70">{category}</span>)}</div><div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{inventoryItems.map((item) => <article key={item.name} className="overflow-hidden rounded-sm border border-navy/10 bg-canvas transition hover:shadow-soft"><div className="relative aspect-[4/3] bg-[#f4f5f2]"><Image src={item.image} alt={item.alt} fill className="object-cover" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" /></div><div className="p-6"><div className="flex items-center justify-between gap-3"><p className="eyebrow">{item.category}</p><span className="inline-flex items-center gap-1 text-xs text-navy/50"><Check size={13} className="text-burgundy" /> Quote-based</span></div><h2 className="mt-3 text-xl font-semibold">{item.name}</h2><p className="mt-3 text-sm leading-6 text-navy/60">{item.description}</p><Button asChild variant="ghost" className="mt-5 px-0"><Link href={`/get-a-quote?equipment=${encodeURIComponent(item.name)}`}>Request a quote <ArrowRight className="ml-2" size={16} /></Link></Button></div></article>)}</div><div className="mt-16 rounded-sm bg-burgundy p-8 text-white sm:p-12"><p className="eyebrow text-white/70">Looking for something specific?</p><div className="mt-4 flex flex-col justify-between gap-6 sm:flex-row sm:items-end"><h2 className="max-w-xl text-3xl font-semibold">Tell us about your guest count, venue and date.</h2><Button asChild variant="secondary"><Link href="/get-a-quote">Start a request <ArrowRight className="ml-2" size={17} /></Link></Button></div></div></section></div>; }
+const inventory = [
+  { title: "Wedding setups", description: "Chairs, lounge seating, signage, glassware and premium décor packages.", stock: "12 collections" },
+  { title: "Corporate event kits", description: "Stage accessories, AV stations, branded signage and desk arrangements.", stock: "8 active kits" },
+  { title: "Outdoor equipment", description: "Tents, lighting rigs, generators, flooring and weather protection packages.", stock: "19 units" },
+  { title: "Hospitality support", description: "Catering support equipment, service tables, linens and guest-flow items.", stock: "6 checklists" },
+];
+
+export default function InventoryPage() {
+  return <ProtectedContent>
+    <div className="container-shell py-24">
+      <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="eyebrow">Inventory workspace</p>
+          <h1 className="mt-4 text-5xl font-semibold">Event-ready assets and resources.</h1>
+        </div>
+        <Button asChild size="lg"><Link href="/get-a-quote">Request equipment <ArrowRight className="ml-2" size={18} /></Link></Button>
+      </div>
+
+      <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        {inventory.map((item) => (
+          <article key={item.title} className="rounded-sm border border-navy/10 bg-canvas p-6 shadow-soft">
+            <Box className="text-burgundy" size={20} />
+            <h2 className="mt-5 text-xl font-semibold">{item.title}</h2>
+            <p className="mt-3 text-sm leading-6 text-navy/60">{item.description}</p>
+            <p className="mt-5 text-sm font-semibold text-navy">{item.stock}</p>
+          </article>
+        ))}
+      </div>
+
+      <section className="mt-16 rounded-sm bg-navy p-8 text-white sm:p-12">
+        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+          <div>
+            <p className="eyebrow text-white/60">Operations overview</p>
+            <h2 className="mt-4 text-3xl font-semibold">Everything your team needs for confident event delivery.</h2>
+          </div>
+          <div className="space-y-4 text-sm text-white/75">
+            <div className="flex items-start gap-3"><Check className="mt-0.5 text-burgundy" size={18} /> <span>Inventory status updates by category</span></div>
+            <div className="flex items-start gap-3"><Check className="mt-0.5 text-burgundy" size={18} /> <span>Equipment allocation tracked for each event</span></div>
+            <div className="flex items-start gap-3"><Check className="mt-0.5 text-burgundy" size={18} /> <span>Delivery and setup coordination built into planning</span></div>
+          </div>
+        </div>
+      </section>
+
+      <div className="mt-16 grid gap-6 lg:grid-cols-3">
+        <div className="rounded-sm border border-navy/10 bg-[#f4f5f2] p-6">
+          <Calendar className="text-burgundy" size={20} />
+          <h3 className="mt-4 text-xl font-semibold">Upcoming events</h3>
+          <p className="mt-3 text-sm leading-6 text-navy/60">2 weddings, 1 venue setup, and 3 corporate activations on the planning board.</p>
+        </div>
+        <div className="rounded-sm border border-navy/10 bg-[#f4f5f2] p-6">
+          <Box className="text-burgundy" size={20} />
+          <h3 className="mt-4 text-xl font-semibold">High-demand items</h3>
+          <p className="mt-3 text-sm leading-6 text-navy/60">Tent structures, outdoor lighting, lounge setups and premium stool packs are currently active.</p>
+        </div>
+        <div className="rounded-sm border border-navy/10 bg-[#f4f5f2] p-6">
+          <ArrowRight className="text-burgundy" size={20} />
+          <h3 className="mt-4 text-xl font-semibold">Next action</h3>
+          <p className="mt-3 text-sm leading-6 text-navy/60">Review outstanding equipment requests and confirm delivery windows before Friday.</p>
+        </div>
+      </div>
+    </div>
+  </ProtectedContent>;
+}
